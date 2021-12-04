@@ -13,8 +13,6 @@ CXXFLAGS = "-std=c++20 -Wall -Wextra"
 HS = "ghc"
 HSFLAGS = "-dynamic"
 
-#ghc -dynamic -o day_2 day_2.hs
-
 def try_to_make_program (file):
   base, ext = file.split ('.')
 
@@ -58,7 +56,20 @@ def run_with_stdin (cmd, stdin):
       .decode ("utf-8")
 
 
+def clean ():
+  # Remove all files that have executable permissions and no extension (except
+  # for this script itself)
+  for f in os.listdir ():
+    if f != "run" and os.path.isfile (f) and os.access (f, os.X_OK) and (f == f.split ('.')[0]):
+      print (f"\x1b[36mRemoving:\x1b[0m \x1b[92m{f}*\x1b[0m")
+      os.remove (f)
+
+
 def main ():
+  if "-clean" in sys.argv:
+    clean ()
+    return 0
+
   try:
     day = sys.argv[1]
   except IndexError:
