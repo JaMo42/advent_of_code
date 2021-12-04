@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+import sys
+import subprocess
+from subprocess import Popen, PIPE
+import os
+
+CC = "gcc"
+CXX = "g++"
+
+CFLAGS = "-std=c11 -Wall -Wextra"
+CXXFLAGS = "-std=c++20 -Wall -Wextra"
+
+def try_to_make_program (file):
+  base, ext = file.split ('.')
+  if ext == "c":
+    cmd = f"{CC} {CFLAGS} -o {base} {file}"
+    print (f"\x1b[36mCompiling:\x1b[0m {file} \x1b[90m->\x1b[0m {base}")
+    subprocess.run (cmd.split ())
+    return base
+
+
+def run_with_stdin (cmd, stdin):
+  if isinstance (stdin, str):
+    stdin = stdin.encode ("utf-8")
+  return Popen (cmd, stdin=PIPE, stdout=PIPE) \
+      .communicate (stdin)[0] \
+      .decode ("utf-8")
+
+
+def main ():
+  try:
+    day = sys.argv[1]
+  except IndexError:
+    print ("No day")
+    return 1
+
+  exe = None
+  for a in sys.argv[1:]:
+    if a.startswith ("--exe"):
+      exe = a.split ('=')[1]
+
+  use_example_data = "-example" in sys.argv
+  input_file = f"input/{day.split ('_')[0]}" + ("_example" if use_example_data else "")
+
+  if exe is None:
+    consider = [i for i in os.listdir ()
+                if i == f"day_{day}" or i.startswith (f"day_{day}.")]
+    for c in consider:
+      if os.access (c, os.X_OK):
+        exe = c
+    if exe is None:
+      exe = try_to_make_program (consider[0])
+
+  cmd = f"cat {input_file} | ./{exe}"
+  print (f"\x1b[36mRunning:\x1b[0m {exe}")
+  output = run_with_stdin (f"./{exe}", open (input_file, 'r').read ())
+  sys.stdout.write (output)
+
+  return 0
+
+if __name__ == "__main__":
+  sys.exit (main ())
+
