@@ -43,6 +43,7 @@ def main ():
   draws = [int (i) for i in lines[0].split (',')]
 
   g = []
+  gg = None
   s = 0
   l = 0 if CHECK_LAST else (len (draws) + 1)
   for line in lines[2:]:
@@ -51,11 +52,15 @@ def main ():
       if (ll > l) if CHECK_LAST else (ll < l):
         s = ss
         l = ll
+        gg = g
       g = []
     else:
       g.append ([Cell (int (i), False) for i in line.split ()])
 
-  print (s)
+  if s:
+    print ("Winning board:")
+    pprint (gg)
+    print (f"Score: \x1b[1;32m{s}\x1b[0m")
 
 if __name__ == "__main__":
   if '-last' in sys.argv[1:]:
