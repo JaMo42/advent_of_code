@@ -12,11 +12,22 @@ CXXFLAGS = "-std=c++20 -Wall -Wextra"
 
 def try_to_make_program (file):
   base, ext = file.split ('.')
+
+  compile_cmd = None
+  compile_in = None
+  compile_out = None
+
   if ext == "c":
-    cmd = f"{CC} {CFLAGS} -o {base} {file}"
-    print (f"\x1b[36mCompiling:\x1b[0m {file} \x1b[90m->\x1b[0m {base}")
-    subprocess.run (cmd.split ())
-    return base
+    compile_in = file
+    compile_out = base
+    compile_cmd = f"{CC} {CFLAGS} -o {compile_out} {compile_in}"
+  else:
+    print (f"\x1b[31mError:\x1b[0m no rule to compile {file}")
+    return None
+
+  print (f"\x1b[36mCompiling:\x1b[0m {file} \x1b[90m->\x1b[0m {base}")
+  subprocess.run (compile_cmd.split ())
+  return compile_out
 
 
 def run_with_stdin (cmd, stdin):
@@ -31,7 +42,7 @@ def main ():
   try:
     day = sys.argv[1]
   except IndexError:
-    print ("No day")
+    print ("\x1b[31mError:\x1b[0m no day given")
     return 1
 
   exe = None
@@ -52,11 +63,18 @@ def main ():
       exe = try_to_make_program (consider[0])
 
   if exe is None:
-    print ("Could not find a executable or file to create it from")
+    print ("\x1b[31mError:\x1b[0m could not find a executable or file to create it from")
     return 1
 
   cmd = f"cat {input_file} | ./{exe}"
   print (f"\x1b[36mRunning:\x1b[0m {exe}")
+  try:
+    input_content = open (input_file, 'r').read ()
+  except Exception as e:
+    print (f"\x1b[31mError:\x1b[0m cannot not read input file {input_file} " \
+           f"({str (type (e))[8:-2]})")
+    return 1
+
   output = run_with_stdin (f"./{exe}", open (input_file, 'r').read ())
   sys.stdout.write (output)
 
