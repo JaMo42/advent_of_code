@@ -21,6 +21,10 @@ def try_to_make_program (file):
     compile_in = file
     compile_out = base
     compile_cmd = f"{CC} {CFLAGS} -o {compile_out} {compile_in}"
+  elif ext == "cc":
+    compile_in = file
+    compile_out = base
+    compile_cmd = f"{CXX} {CXXFLAGS} -o {compile_out} {compile_in}"
   else:
     print (f"\x1b[31mError:\x1b[0m no rule to compile {file}")
     return None
