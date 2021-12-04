@@ -37,7 +37,7 @@ def try_to_make_program (file):
 def run_with_stdin (cmd, stdin):
   if isinstance (stdin, str):
     stdin = stdin.encode ("utf-8")
-  return Popen (cmd, stdin=PIPE, stdout=PIPE) \
+  return Popen (cmd.split (), stdin=PIPE, stdout=PIPE) \
       .communicate (stdin)[0] \
       .decode ("utf-8")
 
@@ -57,6 +57,10 @@ def main ():
   use_example_data = "-example" in sys.argv
   input_file = f"input/{day.split ('_')[0]}" + ("_example" if use_example_data else "")
 
+  pass_through = []
+  if "--" in sys.argv[1:]:
+    pass_through = sys.argv[sys.argv.index ("--") + 1:]
+
   if exe is None:
     consider = [i for i in os.listdir ()
                 if i == f"day_{day}" or i.startswith (f"day_{day}.")]
@@ -70,8 +74,7 @@ def main ():
     print ("\x1b[31mError:\x1b[0m could not find a executable or file to create it from")
     return 1
 
-  cmd = f"cat {input_file} | ./{exe}"
-  print (f"\x1b[36mRunning:\x1b[0m {exe}")
+  cmd = f"./{exe} {' '.join (pass_through)}".strip ()
   try:
     input_content = open (input_file, 'r').read ()
   except Exception as e:
@@ -79,7 +82,8 @@ def main ():
            f"({str (type (e))[8:-2]})")
     return 1
 
-  output = run_with_stdin (f"./{exe}", open (input_file, 'r').read ())
+  print (f"\x1b[36mRunning:\x1b[0m {cmd}")
+  output = run_with_stdin (cmd, open (input_file, 'r').read ())
   sys.stdout.write (output)
 
   return 0
