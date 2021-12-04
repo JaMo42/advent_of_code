@@ -12,3 +12,9 @@ The example data can be used with the `-example` option.
 If no executable for the day exists, the script will try to build it.
 All options that appear after `--` are passed to the program.
 
+## Days
+
+`./run D` for part one and `./run D_2` for part two except in these cases:
+
+- Day 4: `./run 4` for part one, `./run 4 -- -last` for part two
+
