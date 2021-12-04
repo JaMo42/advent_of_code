@@ -3,6 +3,8 @@ import sys
 from pprint import pprint
 from dataclasses import dataclass
 
+CHECK_LAST = False
+
 @dataclass
 class Cell:
   n: int
@@ -32,8 +34,7 @@ def run (g, draws):
           c.m = True
     if (is_solved (g)):
       return score (g, d), i
-  #return 0, len (draws) + 1
-  return 0, 0
+  return 0, (0 if CHECK_LAST else (len (draws) + 1))
 
 
 def main ():
@@ -43,13 +44,11 @@ def main ():
 
   g = []
   s = 0
-  #l = len (draws) + 1
-  l = 0
+  l = 0 if CHECK_LAST else (len (draws) + 1)
   for line in lines[2:]:
     if not line:
       ss, ll = run (g, draws)
-      #if ll < l:
-      if ll > l:
+      if (ll > l) if CHECK_LAST else (ll < l):
         s = ss
         l = ll
       g = []
@@ -59,5 +58,7 @@ def main ():
   print (s)
 
 if __name__ == "__main__":
+  if '-last' in sys.argv[1:]:
+    CHECK_LAST = True
   main ()
 
