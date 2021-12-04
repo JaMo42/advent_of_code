@@ -10,6 +10,11 @@ CXX = "g++"
 CFLAGS = "-std=c11 -Wall -Wextra"
 CXXFLAGS = "-std=c++20 -Wall -Wextra"
 
+HS = "ghc"
+HSFLAGS = "-dynamic"
+
+#ghc -dynamic -o day_2 day_2.hs
+
 def try_to_make_program (file):
   base, ext = file.split ('.')
 
@@ -21,15 +26,22 @@ def try_to_make_program (file):
     compile_in = file
     compile_out = base
     compile_cmd = f"{CC} {CFLAGS} -o {compile_out} {compile_in}"
+
   elif ext == "cc":
     compile_in = file
     compile_out = base
     compile_cmd = f"{CXX} {CXXFLAGS} -o {compile_out} {compile_in}"
+
+  elif ext == "hs":
+    compile_in = file
+    compile_out = base
+    compile_cmd = f"{HS} {HSFLAGS} -o {compile_out} {compile_in}"
+
   else:
     print (f"\x1b[31mError:\x1b[0m no rule to compile {file}")
     return None
 
-  print (f"\x1b[36mCompiling:\x1b[0m {file} \x1b[90m->\x1b[0m {base}")
+  print (f"\x1b[36mCompiling:\x1b[0m {file} \x1b[90m-> \x1b[92m{base}*\x1b[0m")
   subprocess.run (compile_cmd.split ())
   return compile_out
 
