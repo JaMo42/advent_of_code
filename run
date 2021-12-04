@@ -48,8 +48,12 @@ def main ():
     for c in consider:
       if os.access (c, os.X_OK):
         exe = c
-    if exe is None:
+    if exe is None and len (consider) > 0:
       exe = try_to_make_program (consider[0])
+
+  if exe is None:
+    print ("Could not find a executable or file to create it from")
+    return 1
 
   cmd = f"cat {input_file} | ./{exe}"
   print (f"\x1b[36mRunning:\x1b[0m {exe}")

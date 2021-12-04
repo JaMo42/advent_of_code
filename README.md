@@ -1,32 +1,15 @@
 # Advent of Code 2021
 
-## Day 1
+## Running
 
-Part One:
-
-```shell
-gcc -o day_1 day_1.c
-cat input/1 | ./day_1
-```
-
-Part Two:
+For day `D`:
 
 ```shell
-gcc -o day_1_2 day_1_2.c
-cat input/1 | ./day_1_2
+./run D [-example]
 ```
 
-## Day 4
-
-Part One:
-
-```shell
-cat input/4 | ./day_4.py
-```
-
-Part Two:
-
-```shell
-cat input/4 | ./day_4.py -last
-```
+`D` can either be just a number (for example `7`) or a number and a part (for example `1_2`),
+The first number of this sequence is used to determine the input file.
+The example data can be used with the `-example` option.
+If no executable for the day exists, the script will try to build it.
 
