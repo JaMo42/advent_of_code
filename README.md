@@ -19,11 +19,11 @@ Run with `-clean` to remove all built executables.
 
 These days require to run `D_2` for the second part (replace `D` with the day number):
 
-- Day 1
 - Day 2
 
 These days run both parts at once:
 
+- Day 1
 - Day 3
 
 These are special cases:
