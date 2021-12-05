@@ -36,13 +36,13 @@ part_one (const std::vector<bitset_type> &values, std::size_t bits)
       epsilon_rate.set (i, get_common (false, i, values));
     }
 
-  std::printf ("Gamma            :   %s (%llu)\n",
+  std::printf ("Gamma            : %s (%llu)\n",
                gamma_rate.to_string ().c_str () + Bits - bits,
                gamma_rate.to_ullong ());
   std::printf ("Epsilon          : %s (%llu)\n",
                epsilon_rate.to_string ().c_str () + Bits - bits,
                epsilon_rate.to_ullong ());
-  std::printf ("Power consumption: %llu\n",
+  std::printf ("Power consumption: \x1b[92m%llu\x1b[0m\n",
                gamma_rate.to_ullong () * epsilon_rate.to_ullong ());
 }
 
@@ -70,10 +70,11 @@ part_two (const std::vector<bitset_type> &values, std::size_t bits)
 
   std::printf ("Oxygen generator: %llu\n", oxygen);
   std::printf ("CO2 scrubber    : %llu\n", co2);
-  std::printf ("Lifetime support: %llu\n", oxygen * co2);
+  std::printf ("Lifetime support: \x1b[92m%llu\x1b[0m\n", oxygen * co2);
 }
 
-int main ()
+int
+main ()
 {
   char buf[Bits + 1];
   char *end;
@@ -89,9 +90,8 @@ int main ()
   if (buf[bits - 1] == '\n')
     --bits;
 
-  std::puts ("==== PART ONE ====");
   part_one (values, bits);
-  std::puts ("==== PART TWO ====");
+  std::putchar ('\n');
   part_two (values, bits);
 }
 
