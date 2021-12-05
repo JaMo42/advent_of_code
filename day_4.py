@@ -37,8 +37,8 @@ def run (g, draws):
   return 0, (0 if CHECK_LAST else (len (draws) + 1))
 
 
-def main ():
-  lines = sys.stdin.read ().split ('\n')
+def main (stdin):
+  lines = stdin.split ('\n')
   lines.append ([])
   draws = [int (i) for i in lines[0].split (',')]
 
@@ -58,12 +58,15 @@ def main ():
       g.append ([Cell (int (i), False) for i in line.split ()])
 
   if s:
-    print ("Winning board:")
+    print ("Winning board")
     pprint (gg)
     print (f"Score: \x1b[1;32m{s}\x1b[0m")
 
 if __name__ == "__main__":
-  if '-last' in sys.argv[1:]:
-    CHECK_LAST = True
-  main ()
+  stdin = sys.stdin.read ()
+  print ("==== Least guesses ====")
+  main (stdin)
+  print ("==== Most guesses ====")
+  CHECK_LAST = True
+  main (stdin)
 

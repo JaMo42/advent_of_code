@@ -17,16 +17,9 @@ Run with `-clean` to remove all built executables.
 
 ## Days
 
-These days require to run `D_2` for the second part (replace `D` with the day number):
-
-- Day 2
-
-These days run both parts at once:
-
-- Day 1
-- Day 3
+Most days run both parts when using `./run D`.
 
 These are special cases:
 
-- Day 4: `./run 4` for part one, `./run 4 -- -last` for part two
+- Day 2: `./run 2` for part one, `./run 2_2` for part two
 
