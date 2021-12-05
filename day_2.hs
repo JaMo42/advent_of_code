@@ -23,19 +23,13 @@ sumData xs = foldl addTuple (0, 0, 0) xs
 
 {-------- Part 1 --------}
 
-multiply1 :: (Int, Int, Int) -> Int
-multiply1 (a, b, c) = a * c
-
 partOne :: (Int, Int, Int) -> Int
-partOne input = multiply1 (input)
+partOne (pos, _, depth) = pos * depth
 
 {-------- Part 2 --------}
 
-multiply2 :: (Int, Int, Int) -> Int
-multiply2 (a, b, c) = a * b
-
 partTwo :: (Int, Int, Int) -> Int
-partTwo input = multiply2 (input)
+partTwo (pos, depth, aim) = pos * depth
 
 {-------- Main --------}
 
