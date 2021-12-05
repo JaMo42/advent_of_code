@@ -14,7 +14,16 @@ All options that appear after `--` are passed to the program.
 
 ## Days
 
-`./run D` for part one and `./run D_2` for part two except in these cases:
+These days require to run `D_2` for the second part (replace `D` with the day number):
+
+- Day 1
+- Day 2
+
+These days run both parts at once:
+
+- Day 3
+
+These are special cases:
 
 - Day 4: `./run 4` for part one, `./run 4 -- -last` for part two
 
