@@ -17,9 +17,9 @@ def line_iter (p1, p2, d):
     if x1 > x2:
       x1, x2 = x2, x1
       y1, y2 = y2, y1
-    ys = 1 if y2 > y1 else -1
+    yd = 1 if y2 > y1 else -1
     for i, x in enumerate (range (x1, x2+1)):
-      yield (x, y1+i*ys)
+      yield (x, y1+i*yd)
   else:
     return []
 
@@ -36,18 +36,13 @@ def solve (lines, allow_diagonal):
     for p in line_iter (p1, p2, allow_diagonal):
       cells[p] += 1
 
-  if maxx < 30 and maxy < 30:
+  if maxx == 9:
     o = [['.' for x in range (maxx+1)] for y in range (maxy+1)]
     for c in cells:
       o[c[1]][c[0]] = str (cells[c])
     sys.stdout.write ('\n'.join (''.join (i) for i in o) + '\n')
 
-  d = 0
-  for c in cells:
-    if cells[c] >= 2:
-      d += 1
-
-  return d
+  return sum (map (lambda v: int (v >= 2), cells.values ()))
 
 
 def main ():
