@@ -36,14 +36,12 @@ part_one (const std::vector<bitset_type> &values, std::size_t bits)
       epsilon_rate.set (i, get_common (false, i, values));
     }
 
-  std::printf ("Gamma            : %s (%llu)\n",
-               gamma_rate.to_string ().c_str () + Bits - bits,
-               gamma_rate.to_ullong ());
-  std::printf ("Epsilon          : %s (%llu)\n",
-               epsilon_rate.to_string ().c_str () + Bits - bits,
-               epsilon_rate.to_ullong ());
-  std::printf ("Power consumption: \x1b[92m%llu\x1b[0m\n",
-               gamma_rate.to_ullong () * epsilon_rate.to_ullong ());
+  const auto gamma = gamma_rate.to_ullong ();
+  const auto epsilon = epsilon_rate.to_ullong ();
+
+  std::printf ("Gamma Rate       : %llu\n", gamma);
+  std::printf ("Epsilon Rate     : %llu\n", epsilon);
+  std::printf ("Power consumption: \x1b[92m%llu\x1b[0m\n", gamma * epsilon);
 }
 
 bitset_type
@@ -65,8 +63,8 @@ part_two (const std::vector<bitset_type> &values, std::size_t bits)
 {
   auto oxygen_values = values, co2_values = values;
 
-  unsigned long long oxygen = filter (oxygen_values, bits - 1, true).to_ullong ();
-  unsigned long long co2 = filter (co2_values, bits - 1, false).to_ullong ();
+  const auto oxygen = filter (oxygen_values, bits - 1, true).to_ullong ();
+  const auto co2 = filter (co2_values, bits - 1, false).to_ullong ();
 
   std::printf ("Oxygen generator: %llu\n", oxygen);
   std::printf ("CO2 scrubber    : %llu\n", co2);
