@@ -15,11 +15,3 @@ If no executable for the day exists, the script will try to build it.
 All options that appear after `--` are passed to the program.
 Run with `-clean` to remove all built executables.
 
-## Days
-
-Most days run both parts when using `./run D`.
-
-These are special cases:
-
-- Day 2: `./run 2` for part one, `./run 2_2` for part two
-
