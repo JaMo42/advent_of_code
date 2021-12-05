@@ -3,36 +3,8 @@ module Main where
 readInputLines :: IO [String]
 readInputLines = lines <$> getContents
 
-{-------- Part 1 --------}
-
--- Process commands
-
-processLine1 :: String -> (Int, Int)
-processLine1 line =
-  let [command, amount] = words line
-  in
-    if command == "forward" then (read amount, 0)
-    else if command == "down" then (0, read amount)
-    else if command == "up" then (0, - read amount)
-    else error "Invalid input"
-
-processLines1 :: [String] -> [(Int, Int)]
-processLines1 lines = map processLine1 lines
-
--- Sum values
-
-addTuple1 :: (Int, Int) -> (Int, Int) -> (Int, Int)
-addTuple1 (a, b) (x, y) = (a+x, b+y)
-
-sum1 :: [(Int, Int)] -> (Int, Int)
-sum1 xs = foldl addTuple1 (0, 0) xs
-
-{-------- Part 2 --------}
-
--- Process commands
-
-processLine2 :: String -> (Int, Int, Int)
-processLine2 line =
+processLine :: String -> (Int, Int, Int)
+processLine line =
   let [command, amount] = words line
   in
     if command == "forward" then (read amount, 0, 0)
@@ -40,32 +12,32 @@ processLine2 line =
     else if command == "up" then (0, 0, - read amount)
     else error "Invalid input"
 
-processLines2 :: [String] -> [(Int, Int, Int)]
-processLines2 lines = map processLine2 lines
+processLines :: [String] -> [(Int, Int, Int)]
+processLines lines = map processLine lines
 
--- Sum values
+addTuple :: (Int, Int, Int) -> (Int, Int, Int) -> (Int, Int, Int)
+addTuple (a, b, c) (x, y, z) = (a+x, b+x*c, c+z)
 
-addTuple2 :: (Int, Int, Int) -> (Int, Int, Int) -> (Int, Int, Int)
-addTuple2 (a, b, c) (x, y, z) = (a+x, b+x*c, c+z)
+sumData :: [(Int, Int, Int)] -> (Int, Int, Int)
+sumData xs = foldl addTuple (0, 0, 0) xs
 
-sum2 :: [(Int, Int, Int)] -> (Int, Int, Int)
-sum2 xs = foldl addTuple2 (0, 0, 0) xs
+{-------- Part 1 --------}
 
-multiply1 :: (Int, Int) -> Int
-multiply1 (a, b) = a * b
+multiply1 :: (Int, Int, Int) -> Int
+multiply1 (a, b, c) = a * c
+
+partOne :: [String] -> Int
+partOne lines = multiply1 (sumData (processLines lines))
+
+{-------- Part 2 --------}
 
 multiply2 :: (Int, Int, Int) -> Int
 multiply2 (a, b, c) = a * b
 
-{-------- Main --------}
-
--- Run and output both parts
-
-partOne :: [String] -> Int
-partOne lines = multiply1 (sum1 (processLines1 lines))
-
 partTwo :: [String] -> Int
-partTwo lines = multiply2 (sum2 (processLines2 lines))
+partTwo lines = multiply2 (sumData (processLines lines))
+
+{-------- Main --------}
 
 runParts :: [String] -> (Int, Int)
 runParts lines = (partOne lines, partTwo lines)
