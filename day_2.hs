@@ -26,21 +26,21 @@ sumData xs = foldl addTuple (0, 0, 0) xs
 multiply1 :: (Int, Int, Int) -> Int
 multiply1 (a, b, c) = a * c
 
-partOne :: [String] -> Int
-partOne lines = multiply1 (sumData (processLines lines))
+partOne :: (Int, Int, Int) -> Int
+partOne input = multiply1 (input)
 
 {-------- Part 2 --------}
 
 multiply2 :: (Int, Int, Int) -> Int
 multiply2 (a, b, c) = a * b
 
-partTwo :: [String] -> Int
-partTwo lines = multiply2 (sumData (processLines lines))
+partTwo :: (Int, Int, Int) -> Int
+partTwo input = multiply2 (input)
 
 {-------- Main --------}
 
-runParts :: [String] -> (Int, Int)
-runParts lines = (partOne lines, partTwo lines)
+runParts :: (Int, Int, Int) -> (Int, Int)
+runParts input = (partOne input, partTwo input)
 
 formatOutput :: (Int, Int) -> String
 formatOutput (p1, p2) = ("Part one: \x1b[92m" ++ show p1 ++ "\x1b[0m\n"
@@ -48,5 +48,5 @@ formatOutput (p1, p2) = ("Part one: \x1b[92m" ++ show p1 ++ "\x1b[0m\n"
 
 main :: IO ()
 main = do lines <- readInputLines
-          putStrLn (formatOutput (runParts lines))
+          putStrLn (formatOutput (runParts (sumData (processLines lines))))
 
