@@ -27,20 +27,6 @@ read_initial_state ()
   return state;
 }
 
-void
-print_fish (int8_t *fish)
-{
-  if (vector_empty (fish)) return;
-  size_t i;
-  putchar ('0' + *fish);
-  for (i = 1; i < vector_size (fish); ++i)
-    {
-      putchar (',');
-      putchar ('0' + fish[i]);
-    }
-  putchar ('\n');
-}
-
 size_t
 solve_simulate (int8_t *init, int days)
 {
@@ -130,13 +116,10 @@ main ()
   const int DAYS_1 = 80, DAYS_2 = 256;
   int8_t *init = read_initial_state ();
 
-  fputs ("Initial state: ", stdout);
-  print_fish (init);
-
-  printf ("After %d days, these are \x1b[92m%zu\x1b[0m fishies\n",
+  printf ("After %3d days, there are \x1b[92m%zu\x1b[0m fishies\n",
           DAYS_1, solve_simulate (init, DAYS_1));
 
-  printf ("After %d days, there are \x1b[92m%zu\x1b[0m fishies\n",
+  printf ("After %3d days, there are \x1b[92m%zu\x1b[0m fishies\n",
           DAYS_2, solve_calculate (init, DAYS_2));
 
   vector_free (init);
