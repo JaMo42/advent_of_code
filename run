@@ -5,9 +5,9 @@ from subprocess import Popen, PIPE
 import os
 
 CC = "gcc"
-CXX = "g++"
-
 CFLAGS = "-std=c11 -Wall -Wextra"
+
+CXX = "g++"
 CXXFLAGS = "-std=c++20 -Wall -Wextra"
 
 HS = "ghc"
