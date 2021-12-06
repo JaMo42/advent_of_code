@@ -42,9 +42,15 @@ def try_to_make_program (file):
     return None
 
   print (f"\x1b[36mCompiling:\x1b[0m {file} \x1b[90m-> \x1b[92m{base}*\x1b[0m")
-  subprocess.run (compile_cmd.split ())
+  build_success = subprocess.run (compile_cmd.split ()).returncode == 0
+  if not build_success:
+    print (f"\x1b[31mError:\x1b[0m Compilation failed")
   if compile_after:
-    subprocess.run (compile_after.split ())
+    clean_success = subprocess.run (compile_after.split ()).returncode == 0
+    if not clean_success:
+      print (f"\x1b[33mWarning:\x1b[0m Cleaning failed")
+  if not build_success:
+    sys.exit (1)
   return compile_out
 
 
