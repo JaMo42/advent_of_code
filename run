@@ -65,10 +65,16 @@ def run_with_stdin (cmd, stdin):
 def clean ():
   # Remove all files that have executable permissions and no extension (except
   # for this script itself)
+  did_remove_vgcore = False
   for f in os.listdir ():
     if f != "run" and os.path.isfile (f) and os.access (f, os.X_OK) and (f == f.split ('.')[0]):
       print (f"\x1b[36mRemoving:\x1b[0m \x1b[92m{f}*\x1b[0m")
       os.remove (f)
+    if f.startswith ("vgcore"):
+      os.remove (f)
+      did_remove_vgcore = True
+  if did_remove_vgcore:
+    print (f"\x1b[36mNote:\x1b[0m Removed all valgrind core dumps")
 
 
 def main ():
