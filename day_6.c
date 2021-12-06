@@ -36,9 +36,6 @@ solve_simulate (int8_t *init, int days)
   int sim_step;
   size_t result;
 
-  vector_for_each (init, f)
-    vector_push (current, *f);
-
   for (sim_step = 0; sim_step < days; ++sim_step)
     {
       vector_clear (next);
