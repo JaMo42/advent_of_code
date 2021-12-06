@@ -43,9 +43,6 @@ struct vector__header {
 # endif /* __GNUC__ */
 #endif /* VECTOR__HAS_STATEMENT_EXPRS */
 
-#define VECTOR__TYPES_EQ_HELPER(T, U) _Generic (((T){0}), U: 1, default: 0)
-#define VECTOR__TYPES_EQ(T, U) VECTOR__TYPES_EQ_HELPER (T, U) && VECTOR__TYPES_EQ_HELPER (U, T)
-
 /**
  * Parameters:
  *    v - vector
@@ -179,30 +176,24 @@ struct vector__header {
 #define vector_free(v)\
   ((v) ? (free(vector__get(v)), 0) : 0)
 
-#ifdef VECTOR__DECLTYPE
-/* Iterator through the vector, IT recieves a pointer to each element. */
-#define vector_for_each(v, it)                                        \
-  for (VECTOR__DECLTYPE (v) it = (v), __end = (v) + vector__size (v); \
-       it != __end; ++it)
-#endif
-
-#ifndef VECTOR__DECLTYPE
-#define VECTOR__COPY_DECLTYPE
-#else
-#define VECTOR__COPY_DECLTYPE VECTOR__DECLTYPE
-#endif
-
 /* Create a new vector with the same elements as the input vector */
 #define vector_copy_construct(v)                                              \
   vector__copy (vector__get (vector__create (vector__size (v), sizeof (*v))), \
                 vector__get (v),                                              \
                 sizeof (*v))
 
-/* Copy data from V1 to V2 */
-#define vector_copy(v1, v2)                                                 \
-  (v1                                                                       \
-   ? (v1 = vector__copy (vector__get (v1), vector__get (v2), sizeof (*v1))) \
-   : vector_copy_construct (v2))
+/* Copy data from SRC to DST */
+#define vector_copy(dst, src)                                                  \
+  (dst = (dst                                                                  \
+          ? vector__copy (vector__get (dst), vector__get (src), sizeof (*dst)) \
+          : vector_copy_construct (src)))
+
+#ifdef VECTOR__DECLTYPE
+/* Iterate over the vector, IT recieves a pointer to each element */
+#define vector_for_each(v, it)                                       \
+  for (VECTOR__DECLTYPE (v) it = (v), __end = (v) + vector_size (v); \
+       it != __end; ++it)
+#endif
 
 
 
@@ -256,9 +247,8 @@ vector__copy (struct vector__header *dest, struct vector__header *source,
               size_t elem_size)
 {
   if (source->size > dest->capacity)
-    dest = vector__get (vector__grow_impl (dest->data,
-                                           source->size + dest->capacity,
-                                           elem_size));
+    dest = vector__get (vector__resize_impl (dest->data, source->size,
+                                             elem_size));
   dest->size = source->size;
   return memcpy (dest->data, source->data, source->size * elem_size);
 }
