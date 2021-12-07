@@ -30,16 +30,16 @@ doConstantMove from to = abs (from - to)
 
 -- Calculate sum of list [1..n] without actually creating a list and summing it
 acceleratedFuelUsage :: Int -> Int
-acceleratedFuelUsage n = ((n * (n + 1)) `div` 2)
+acceleratedFuelUsage n = (n * (n + 1) `div` 2)
 
 -- Calculate accelerated fuel usage
 doAcceleratedMove :: Int -> Int -> Int
-doAcceleratedMove from to = acceleratedFuelUsage (abs (from - to))
+doAcceleratedMove from to = acceleratedFuelUsage $ abs (from - to)
 
 -- Calculate the costs for each crab to move to a given position
 moveTo :: Bool -> [Int] -> Int -> Int
-moveTo False crabs pos = sumList (map (doConstantMove pos) crabs)
-moveTo True crabs pos = sumList (map (doAcceleratedMove pos) crabs)
+moveTo False crabs pos = sumList $ map (doConstantMove pos) crabs
+moveTo True crabs pos = sumList $ map (doAcceleratedMove pos) crabs
 
 -- Calculate the costs of the moves for each crab to the small position of
 -- any crab to the biggest
