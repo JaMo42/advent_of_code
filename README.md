@@ -5,7 +5,7 @@ https://adventofcode.com/2021.
 ## Running
 
 ```shell
-./run D [-example] [-- options...] [-clean]
+./run D [-example] [-clean] [-- options...]
 ```
 
 `D` is the number of the day.
