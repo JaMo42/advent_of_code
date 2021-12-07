@@ -70,11 +70,6 @@ formatResult (usage, pos) = ("Best move: Position " ++ show pos
                              ++ ", with a fuel usage of \x1b[92m" ++ show usage
                              ++ "\x1b[0m")
 
-formatOutput :: Int -> Int -> String
-formatOutput part1 part2 = ("Part one: \x1b[92m" ++ show part1 ++ "\x1b[0m\n"
-                            ++ "Part two: \x1b[92m" ++ show part2 ++ "\x1b[0m")
-
-
 main :: IO ()
 main = do crabs <- readInput
           putStrLn ("Constant fuel usage:\n"
