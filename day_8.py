@@ -74,7 +74,7 @@ def part_two (stdin):
 
 
 def main ():
-  stdin = sys.stdin.read ().split ('\n')
+  stdin = [i for i in sys.stdin.read ().split ('\n') if i]
   part_one (stdin)
   part_two (stdin)
 
