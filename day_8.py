@@ -43,11 +43,13 @@ def part_two (stdin):
     seven = segments_to_bitset (next (filter (lambda x: len (x) == 3, hints)))
     eight = segments_to_bitset (next (filter (lambda x: len (x) == 7, hints)))
     # Known to be one of based on length
-    two_three_five = [segments_to_bitset (i) for i in filter (lambda x: len (x) == 5, hints)]
-    zero_six_nine = [segments_to_bitset (i) for i in filter (lambda x: len (x) == 6, hints)]
+    two_three_five = [segments_to_bitset (i)
+                      for i in filter (lambda x: len (x) == 5, hints)]
+    zero_six_nine = [segments_to_bitset (i)
+                     for i in filter (lambda x: len (x) == 6, hints)]
 
-    a = seven ^ one
-    e_g = eight ^ (four | a)
+    a = seven ^ one  # Segment A
+    e_g = eight ^ (four | a)  # Segments E and G
 
     # Kown based on differences
     three = next (filter (lambda x: popcount (x ^ one) == 3, two_three_five))
@@ -55,7 +57,7 @@ def part_two (stdin):
     two = next (filter (lambda x: popcount (x ^ e_g) == 3, two_three_five))
     five = next (filter (lambda x: popcount (x ^ two) == 4, two_three_five))
 
-    b = nine ^ three
+    b = nine ^ three  # Segment B
 
     # Composed
     six = (eight ^ three) | five
@@ -63,10 +65,10 @@ def part_two (stdin):
 
     digits = [zero, one, two, three, four, five, six, seven, eight, nine]
 
-    value = ""
+    value = 0
     for i in output:
-      value += str (digits.index (i))
-    total += int (value)
+      value = value * 10 + digits.index (i)
+    total += value
 
   print (f"The sum of all values is \x1b[92m{total}\x1b[0m")
 
