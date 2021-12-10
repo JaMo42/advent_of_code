@@ -13,6 +13,8 @@ CXXFLAGS = "-std=c++20 -Wall -Wextra"
 HS = "ghc"
 HSFLAGS = "-dynamic"
 
+RS = "rustc"
+
 def try_to_make_program (file):
   base, ext = file.split ('.')
 
@@ -36,6 +38,11 @@ def try_to_make_program (file):
     compile_out = base
     compile_cmd = f"{HS} {HSFLAGS} -o {compile_out} {compile_in}"
     compile_after = f"rm {compile_out}.hi {compile_out}.o"
+
+  elif ext == "rs":
+    compile_in = file
+    compile_out = base
+    compile_cmd = f"{RS} {compile_in}"
 
   else:
     print (f"\x1b[31mError:\x1b[0m no rule to compile {file}")
