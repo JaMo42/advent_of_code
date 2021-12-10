@@ -109,7 +109,8 @@ def main ():
 
   if exe is None:
     consider = [i for i in os.listdir ()
-                if i == f"day_{day}" or i.startswith (f"day_{day}.")]
+                if (i == f"day_{day}" or i.startswith (f"day_{day}."))
+                    or i ==f"day_0{day}" or i.startswith (f"day_0{day}.")]
     for c in consider:
       if os.access (c, os.X_OK):
         exe = c
