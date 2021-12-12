@@ -53,22 +53,23 @@ fn part_one_constraint (node: &NodeId, path: &Vec<NodeId>) -> bool
   return !(node_is_small (node) && path.contains (node));
 }
 
+fn count<T: std::cmp::PartialEq> (x: &T, v: &Vec<T>) -> usize
+{
+  let mut c: usize = 0;
+  for i in v {
+    if i == x {
+      c += 1;
+    }
+  }
+  return c;
+}
+
 fn part_two_constraint (node: &NodeId, path: &Vec<NodeId>) -> bool
 {
-  // Is it ugly? yes
-  // Does it work? yes
   if node_is_small (node) && path.contains (node) {
     for n in path {
-      if node_is_small (n) {
-        let mut c = 0;
-        for nn in path {
-          if nn == n {
-            c += 1;
-            if c > 1 {
-              return false;
-            }
-          }
-        }
+      if node_is_small (n) && count (n, path) > 1 {
+        return false;
       }
     }
   }
