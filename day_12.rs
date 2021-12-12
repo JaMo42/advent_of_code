@@ -19,7 +19,7 @@ fn make_node_id (name: &str) -> NodeId
 
 fn node_is_small (n: &NodeId) -> bool
 {
-  // Check if the first character of the node was lower case, all characters
+  // Check if the last character of the node was lower case, all characters
   // in the node names have the same case.
   return (n & 32) == 32;
 }
