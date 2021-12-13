@@ -31,8 +31,7 @@ fn do_fold (dots: &mut HashSet<(u64, u64)>, (axis, pos): &(char, u64))
   let before = dots.clone ();
   *dots = HashSet::new ();
 
-  for dot in before {
-    let (x, y) = dot;
+  for (x, y) in before {
     // If a dot lies beyond the folding position on the given axis, mirror it
     // by the folding position
     match axis {
@@ -52,8 +51,7 @@ fn print_paper (dots: &HashSet<(u64, u64)>)
   let mut width = 0;
   let mut height = 0;
   // Get dimensions
-  for d in dots {
-    let (x, y) = d;
+  for (x, y) in dots {
     if *x > width {
       width = *x;
     }
