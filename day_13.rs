@@ -1,23 +1,27 @@
 use std::io::{self, BufRead};
 use std::collections::HashSet;
 
+macro_rules! scan {
+  ($str:expr, $sep:expr, $($x:ty),+) => {{
+    let mut it = $str.split ($sep);
+    ($(it.next ().and_then (|w| w.parse::<$x> ().ok ()).unwrap (),)*)
+  }}
+}
+
 fn parse_input (input: &Vec<String>, dots: &mut HashSet<(u64, u64)>,
                 instructions: &mut Vec<(char, u64)>)
 {
   let mut i: usize = 0;
   // Read dots until we hit the separating empty line
   while input[i].len () != 0 {
-    let mut xy = input[i].split (',').map (|x| x.parse::<u64> ().unwrap ());
-    dots.insert ((xy.next ().unwrap (), xy.next ().unwrap ()));
+    dots.insert (scan! (input[i], ',', u64, u64));
     i += 1;
   }
   // Then read instructions until input is exhausted
   i += 1;
   while i < input.len () {
-    let mut axis_and_value = input[i].split (' ').last ().unwrap ().split ('=');
-    let axis = axis_and_value.next ().unwrap ().chars ().next ().unwrap ();
-    let value = axis_and_value.next ().unwrap ().parse::<u64> ().unwrap ();
-    instructions.push ((axis, value));
+    let axis_and_position = input[i].split (' ').last ().unwrap ();
+    instructions.push (scan! (axis_and_position, '=', char, u64));
     i += 1;
   }
 }
@@ -29,6 +33,8 @@ fn do_fold (dots: &mut HashSet<(u64, u64)>, (axis, pos): &(char, u64))
 
   for dot in before {
     let (x, y) = dot;
+    // If a dot lies beyond the folding position on the given axis, mirror it
+    // by the folding position
     match axis {
       'x' => {
         dots.insert ((if x > *pos { *pos - (x - *pos)} else { x }, y));
@@ -40,7 +46,6 @@ fn do_fold (dots: &mut HashSet<(u64, u64)>, (axis, pos): &(char, u64))
     }
   }
 }
-
 
 fn print_paper (dots: &HashSet<(u64, u64)>)
 {
