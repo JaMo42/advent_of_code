@@ -86,7 +86,7 @@ fn main ()
   let mut instructions = instructions_list.iter ();
 
   do_fold (&mut dots, instructions.next ().unwrap ());
-  println! ("There \x1b[92m{}\x1b[0m dots after the first fold", dots.len ());
+  println! ("There are \x1b[92m{}\x1b[0m dots after the first fold", dots.len ());
 
   for i in instructions {
     do_fold (&mut dots, i);
