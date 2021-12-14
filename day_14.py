@@ -20,6 +20,12 @@ class Polymer:
   def step (self):
     new_state = defaultdict (int)
     for c in self._combinations:
+      # Exmaple:
+      # If `c` is `NN`, `ins` is `C` so the next state will contain `NCN`
+      # instead of `NN`, increment count of `NC` and `CN` by the number of `NN`
+      # combinations in the current state.
+      # Then add the count of current `NN` combinations to the count of the
+      # newly inserted element.
       ins = self.COMBINATIONS[c]
       new_state[c[0]+ins] += self._combinations[c]
       new_state[ins+c[1]] += self._combinations[c]
