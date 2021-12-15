@@ -21,10 +21,6 @@ class AStar:
     dy = abs (end[1] - node[1])
     return D1 * (dx + dy) + (D2 - 2 * D1) * min (dx, dy)
 
-  @staticmethod
-  def __meta_factory ():
-    return {'f': INFINITY, 'g': INFINITY, 'prev': None}
-
   def __init__ (self, grid):
     self._grid = grid
     self._width = len (grid[0])
@@ -58,12 +54,12 @@ class AStar:
   def cost (self, node, to):
     return self._grid[to[1]][to[0]]
 
-  def get_path (self, start=(0, 0), goal=None):
+  def get_path_risk (self, start=(0, 0), goal=None):
     if goal is None:
       goal = (self._width - 1, self._height - 1)
     open_set = set ([start])
-    self._meta = defaultdict (AStar.__meta_factory)
-    self._meta[start] = {'f':0, 'g':self.heuristic (start, goal), 'prev':None}
+    self._meta = defaultdict (lambda: {'f': INFINITY, 'g': INFINITY})
+    self._meta[start] = {'f':0, 'g':0}
 
     while open_set:
       current = min (open_set, key=lambda x: self._meta[x]['f'])
@@ -74,33 +70,11 @@ class AStar:
         cost = self.cost (current, neighbor)
         gscore = self.gscore (current) + cost
         if gscore < self.gscore (neighbor):
-          self.prev (neighbor, current)
           self.gscore (neighbor, gscore)
           self.fscore (neighbor, gscore + AStar.heuristic (neighbor, goal))
           open_set.add (neighbor)
 
-    return self.reconstruct (goal)
-
-  def reconstruct(self, n):
-    p = []
-    while n:
-      p.append (n)
-      n = self.prev (n)
-    return p
-
-
-def print_path (cave, path=[]):
-  out = ""
-  for ri,r in enumerate (cave):
-    for ci,c in enumerate (r):
-      if (ci, ri) in path:
-        out += '\x1b[0m'
-      else:
-        out += '\x1b[90m'
-      out += str (c)
-    out += '\n'
-  out += '\x1b[0m'
-  sys.stdout.write (out)
+    return self.gscore (goal)
 
 
 def build_full_map (original, factor=5):
@@ -120,14 +94,7 @@ def build_full_map (original, factor=5):
 
 def get_risk (cave, show_path=True):
   pathfinder = AStar (cave)
-  path = pathfinder.get_path ()
-  if show_path:
-    print_path (cave, path)
-  risk = 0
-  for i in path:
-    if i != (0, 0):
-      risk += cave[i[1]][i[0]]
-  return risk
+  return pathfinder.get_path_risk ()
 
 
 def main ():
