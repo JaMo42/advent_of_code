@@ -26,19 +26,10 @@ class Bitset:
     self._bigint = int (hexstr, 16)
     self._size = len (hexstr) * 4
 
-  def __str__ (self):
-    return bin (self._bigint)[2:]
-
   def read (self, off, n=1):
     # `off` starts from the left
     off = self._size - off - n
     return (self._bigint & (((1 << n) - 1) << off)) >> off
-
-  def subset (self, begin, end):
-    sub = Bitset ("0")
-    sub._bigint = self.read (begin, end)
-    sub._size = end - begin
-    return sub
 
 
 def read_packet (bits):
