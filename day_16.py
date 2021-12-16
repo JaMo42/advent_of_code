@@ -27,9 +27,9 @@ class Bitset:
     self._size = len (hexstr) * 4
 
   def read (self, off, n=1):
-    # `off` starts from the left
+    # `off` starts from the most significant bit
     off = self._size - off - n
-    return (self._bigint & (((1 << n) - 1) << off)) >> off
+    return (self._bigint >> off) & ((1 << n) - 1)
 
 
 def read_packet (bits):
