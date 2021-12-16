@@ -36,16 +36,16 @@ def read_packet (bits):
   def impl (off):
     version = bits.read (off, 3)
     type_ = bits.read (off+3, 3)
-
     # Literal packet
     if type_ == PacketType.LITERAL:
       o = off + 6
       v = 0
-      while (vv := bits.read (o, 5)) and (vv & 0b10000) == 0b10000:
+      while True:
+        vv = bits.read (o, 5)
         v = (v << 4) | (vv & 0b1111)
         o += 5
-      v = (v << 4) | (vv & 0b1111)
-      o += 5
+        if (vv & 0b10000) == 0:
+          break
       return Packet (version, type_, v), o - off
     # Operator packet
     else:
