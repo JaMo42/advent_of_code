@@ -51,9 +51,9 @@ def explode (lst):
         lst[i+2].value += lst[i+1].value
       lst[i].value = 0
       lst[i].depth -= 1
-      lst[i+1].value = 0
-      lst[i+1].depth -= 1
-      del lst[i]
+      del lst[i+1]
+      # No need to break the operation here since exploding always happens
+      # before splitting so we can just process the entire current list
       L -= 1
     else:
       i += 1
@@ -68,6 +68,8 @@ def split (lst):
       right = Element (ceil (lst[i].value / 2), d)
       lst[i] = left
       lst.insert (i+1, right)
+      # This needs to stop after the first split since we may need to explode
+      # again first after the split
       return True
   return False
 
