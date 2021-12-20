@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys
 import numpy as np
-import struct
 
 def scale_up (img, algorithm, outside=0):
   H, W = img.shape
@@ -36,9 +35,9 @@ def main ():
   final = scale_up_times (intermediate, algorithm, part_two - part_one)
 
   print (f"After scaling up {part_one} times, "\
-         f"there are \x1b[92m{intermediate.sum ()}\x1b[0m lit pixels")
+         f"there are \x1b[92m{intermediate.sum ()}\x1b[0m lit pixels.")
   print (f"After scaling up {part_two} times, "\
-         f"there are \x1b[92m{final.sum ()}\x1b[0m lit pixels")
+         f"there are \x1b[92m{final.sum ()}\x1b[0m lit pixels.")
 
 if __name__ == "__main__":
   main ()
