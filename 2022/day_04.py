@@ -7,14 +7,14 @@ def contains (a: tuple[int, int], b: tuple[int, int]) -> bool:
 
 def overlaps (a: tuple[int, int], b: tuple[int, int]) -> bool:
   check = lambda a, b: (b[0] in range (a[0], a[1]+1)
-                                           or b[1] in range (a[0], a[1]+1))
+                        or b[1] in range (a[0], a[1]+1))
   return check (a, b) or check (b, a)
 
 def assignment_pair (s: str) -> tuple[tuple[int, int], tuple[int, int]]:
-  return tuple (map (
-    lambda p: tuple (int (i) for i in p.split ('-')),
-    s.split (',')
-  ))
+  return tuple (
+    tuple (int (i) for i in assignment.split ('-'))
+    for assignment in s.split (',')
+  )
 
 def main ():
   input = stdin.read ().strip ().split ('\n')
