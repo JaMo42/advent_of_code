@@ -75,7 +75,7 @@ class FileSystem:
   def __init__ (self):
     self._root = Node.directory ("")
     # The current path, without the root element
-    self._path = list[str] ()
+    self._path = list[Node] ()
     # The node at the end of the path, or the root node if it's empty
     self._cwd = self._root
 
@@ -98,9 +98,9 @@ class FileSystem:
         except ValueError as ex:
           print (f"! cd failed: {ex}")
           print (f"! current path is: /{'/'.join (self._path)}")
-          print ("! valid children are:")
-          for c in self._cwd.children ():
-            print (f"!   {c.name ()} ({c.format_type ()})")
+          print ("! valid directories are:")
+          for c in filter (lambda c: c.is_directory (), self._cwd.children ()):
+            print (f"!   ‘{c.name ()}’")
           exit (1)
 
   def add_item (self, line: str):
@@ -121,17 +121,16 @@ class FileSystem:
     INNER_LAST = "╰─ "
     OUTER_MID = "│   "
     OUTER_LAST = "    "
-    def impl (node: Node, prefix: list[str]):
+    def impl (node: Node, prefix: str):
       children = node.sorted_children (group_dirs)
       for (i, child) in enumerate (children):
         is_last = i == len (children) - 1
-        prefix_str = ''.join (prefix)
         my_prefix = INNER_LAST if is_last else INNER_MID
-        print (f"\x1b[2m{prefix_str}{my_prefix}\x1b[22m{child.format ()}")
+        print (f"\x1b[2m{prefix}{my_prefix}\x1b[22m{child.format ()}")
         if child.is_directory ():
-          impl (child, prefix + [OUTER_LAST if is_last else OUTER_MID])
+          impl (child, prefix + (OUTER_LAST if is_last else OUTER_MID))
     print (self._root.format ())
-    impl (self._root, [])
+    impl (self._root, "")
 
 
 def walk (fs: FileSystem, /, directories: bool=False) -> Iterator[Node]:
@@ -145,7 +144,7 @@ def walk (fs: FileSystem, /, directories: bool=False) -> Iterator[Node]:
         if directories:
           continue
         yield c
-  yield from impl (fs._root, directories)
+  yield from impl (fs.root (), directories)
 
 
 def main ():
