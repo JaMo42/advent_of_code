@@ -110,7 +110,9 @@ class Rope:
     width = self._bounds.max_x + 1 + tx + 2 * border
     height = self._bounds.max_y + 1 + ty + 2 * border
     points = list (map (lambda p: p.translated (tx, ty).as_tuple (), self._segments))
-    stdout.write (f"{self._bounds.max_x:>{width}}\r{0:>{tx+1}}\r{self._bounds.min_x}\n")
+    stdout.write (f"{self._bounds.max_x+2*border:>{width}}\r")
+    stdout.write (f"{0:>{tx+1}}\r")
+    stdout.write (f"{self._bounds.min_x-border}\n")
     for row in range (height):
       for col in range (width):
         try:
@@ -124,16 +126,16 @@ class Rope:
         except ValueError:
           if (col, row) == (tx, ty):
             stdout.write ('s')
-          elif (self._bounds.min_x - border + col, self._bounds.min_y - border + row) in self._tail_visited:
+          elif (col - tx, row - ty) in self._tail_visited:
             stdout.write ('#')
           else:
             stdout.write ('.')
       if row == 0:
-        stdout.write (f" {self._bounds.min_y: }")
+        stdout.write (f" {self._bounds.min_y-border: }")
       elif row == ty:
         stdout.write ("  0")
       elif row == height - 1:
-        stdout.write (f" {self._bounds.max_y: }")
+        stdout.write (f" {self._bounds.max_y+2*border: }")
       stdout.write ('\n')
     stdout.flush ()
 
