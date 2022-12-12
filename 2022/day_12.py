@@ -58,10 +58,7 @@ class Heightmap:
   def possible_moves_at (self, x: int, y: int) -> tuple[tuple[int, int], ...]:
     return tuple (filter (
       lambda p: self[p] - self[x, y] <= 1,
-      map (
-        lambda o: (x+o[0], y+o[1]),
-        ((0, -1), (1, 0), (0, 1), (-1, 0))
-      )
+      ((x, y-1), (x+1, y), (x, y+1), (x-1, y))
     ))
 
   def start (self) -> tuple[int, int]:
