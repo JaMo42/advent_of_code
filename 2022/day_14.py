@@ -9,7 +9,7 @@ class World:
     # Sand and rocks are treated the same since placed sand doesn't move.
     self._objects = set[tuple[int, int]] ()
     # We still keep track or what's a rock for nicer printing
-    self._rocks = None
+    self._rocks = frozenset ()
     self._min_x = LARGE_NUMBER
     self._max_x = 0
     self._min_y = LARGE_NUMBER
@@ -50,7 +50,6 @@ class World:
     self._max_y = max (self._max_y, y)
 
   def print (self):
-    assert self._rocks is not None
     min_x = min (self._min_x, self.POURING_POINT[0])
     max_x = max (self._max_x, self.POURING_POINT[0])
     min_y = min (self._min_y, self.POURING_POINT[1])
@@ -58,30 +57,35 @@ class World:
     if self._floor is not None:
       min_x -= 2
       max_x += 2
-    for y in range (min_y, max_y + 1):
-      for x in range (min_x, max_x + 1):
-        if (x, y) in self._rocks or y == self._floor:
-          stdout.write ("\x1b[38;5;248m#")
-        elif (x, y) in self._objects:
-          stdout.write ("\x1b[33mo")
-        elif (x, y) == self.POURING_POINT:
-          stdout.write ("\x1b[36m+")
-        else:
-          stdout.write ("\x1b[38;5;239m.\x1b[22m")
-      stdout.write ('\n')
-    stdout.write ("\x1b[0m")
+    def char (x: int, y: int) -> str:
+      if (x, y) in self._rocks or y == self._floor:
+        return "\x1b[38;5;248m#"
+      elif (x, y) in self._objects:
+        return "\x1b[33mo"
+      elif (x, y) == self.POURING_POINT:
+        return "\x1b[36m+"
+      else:
+        return "\x1b[38;5;239m.\x1b[22m"
+    stdout.write (
+      '\n'.join ([
+        ''.join ([
+          char (x, y) for x in range (min_x, max_x + 1)
+        ]) for y in range (min_y, max_y + 1)
+      ])
+      + "\x1b[0m\n"
+    )
 
   def pour_sand (self) -> bool:
     x, y = self.POURING_POINT
+    if self.POURING_POINT in self._objects:
+      return False
+    max_y = self._max_y if self._floor is None else self._floor - 1
     while True:
-      if self._floor is None:
-        if y > self._max_y:
+      if y == max_y:
+        if self._floor is None:
           return False
-      else:
-        if self.POURING_POINT in self._objects:
-          return False
-      if y + 1 == self._floor:
-        break
+        else:
+          break
       elif (x, y + 1) not in self._objects:
         y += 1
       elif (x - 1, y + 1) not in self._objects:
