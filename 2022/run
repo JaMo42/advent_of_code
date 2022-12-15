@@ -130,8 +130,12 @@ def main ():
     return 1
 
   print (f"\x1b[36mRunning:\x1b[0m {cmd}")
-  output = run_with_stdin (cmd, open (input_file, 'r').read ())
-  sys.stdout.write (output)
+  try:
+    output = run_with_stdin (cmd, open (input_file, 'r').read ())
+  except KeyboardInterrupt:
+    print ("Ctrl-C")
+  else:
+    sys.stdout.write (output)
 
   return 0
 
