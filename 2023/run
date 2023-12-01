@@ -1,0 +1,144 @@
+#!/usr/bin/env python3
+import sys
+import subprocess
+from subprocess import Popen, PIPE
+import os
+
+CC = "gcc"
+CFLAGS = "-std=c11 -Wall -Wextra"
+
+CXX = "g++"
+CXXFLAGS = "-std=c++20 -Wall -Wextra"
+
+HS = "ghc"
+HSFLAGS = "-dynamic"
+
+RS = "rustc"
+
+def try_to_make_program (file):
+  base, ext = file.split ('.')
+
+  compile_cmd = None
+  compile_in = None
+  compile_out = None
+  compile_after = None
+
+  if ext == "c":
+    compile_in = file
+    compile_out = base
+    compile_cmd = f"{CC} {CFLAGS} -o {compile_out} {compile_in}"
+
+  elif ext == "cc":
+    compile_in = file
+    compile_out = base
+    compile_cmd = f"{CXX} {CXXFLAGS} -o {compile_out} {compile_in}"
+
+  elif ext == "hs":
+    compile_in = file
+    compile_out = base
+    compile_cmd = f"{HS} {HSFLAGS} -o {compile_out} {compile_in}"
+    compile_after = f"rm {compile_out}.hi {compile_out}.o"
+
+  elif ext == "rs":
+    compile_in = file
+    compile_out = base
+    compile_cmd = f"{RS} {compile_in}"
+
+  else:
+    print (f"\x1b[31mError:\x1b[0m no rule to compile {file}")
+    return None
+
+  print (f"\x1b[36mCompiling:\x1b[0m {file} \x1b[90m-> \x1b[92m{base}*\x1b[0m")
+  build_success = subprocess.run (compile_cmd.split ()).returncode == 0
+  if not build_success:
+    print (f"\x1b[31mError:\x1b[0m Compilation failed")
+  if compile_after:
+    clean_success = subprocess.run (compile_after.split ()).returncode == 0
+    if not clean_success:
+      print (f"\x1b[33mWarning:\x1b[0m Cleaning failed")
+  if not build_success:
+    sys.exit (1)
+  return compile_out
+
+
+def run_with_stdin (cmd, stdin):
+  if isinstance (stdin, str):
+    stdin = stdin.encode ("utf-8")
+  return Popen (cmd.split (), stdin=PIPE, stdout=PIPE) \
+      .communicate (stdin)[0] \
+      .decode ("utf-8")
+
+
+def clean ():
+  # Remove all files that have executable permissions and no extension (except
+  # for this script itself)
+  did_remove_vgcore = False
+  for f in os.listdir ():
+    if f != "run" and os.path.isfile (f) and os.access (f, os.X_OK) and (f == f.split ('.')[0]):
+      print (f"\x1b[36mRemoving:\x1b[0m \x1b[92m{f}*\x1b[0m")
+      os.remove (f)
+    if f.startswith ("vgcore"):
+      os.remove (f)
+      did_remove_vgcore = True
+  if did_remove_vgcore:
+    print (f"\x1b[36mNote:\x1b[0m Removed all valgrind core dumps")
+
+
+def main ():
+  if "-clean" in sys.argv:
+    clean ()
+    return 0
+
+  try:
+    day = sys.argv[1]
+  except IndexError:
+    print ("\x1b[31mError:\x1b[0m no day given")
+    return 1
+
+  exe = None
+  for a in sys.argv[1:]:
+    if a.startswith ("--exe"):
+      exe = a.split ('=')[1]
+
+  use_example_data = "-example" in sys.argv
+  input_file = f"input/{day.split ('_')[0]}" + ("_example" if use_example_data else "")
+
+  pass_through = []
+  if "--" in sys.argv[1:]:
+    pass_through = sys.argv[sys.argv.index ("--") + 1:]
+
+  if exe is None:
+    consider = [i for i in os.listdir ()
+                if (i == f"day_{day}" or i.startswith (f"day_{day}."))
+                    or i ==f"day_0{day}" or i.startswith (f"day_0{day}.")]
+    for c in consider:
+      if os.access (c, os.X_OK):
+        exe = c
+    if exe is None and len (consider) > 0:
+      exe = try_to_make_program (consider[0])
+
+  if exe is None:
+    print ("\x1b[31mError:\x1b[0m could not find a executable or file to create it from")
+    return 1
+
+  cmd = f"./{exe} {' '.join (pass_through)}".strip ()
+  try:
+    input_content = open (input_file, 'r').read ()
+  except Exception as e:
+    print (f"\x1b[31mError:\x1b[0m cannot not read input file {input_file} " \
+           f"({str (type (e))[8:-2]})")
+    return 1
+
+  print (f"\x1b[36mRunning:\x1b[0m {cmd}")
+  try:
+    output = run_with_stdin (cmd, open (input_file, 'r').read ())
+  except KeyboardInterrupt:
+    print ("Ctrl-C")
+  else:
+    sys.stdout.write (output)
+
+  return 0
+
+if __name__ == "__main__":
+  sys.exit (main ())
+
