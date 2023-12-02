@@ -39,27 +39,25 @@ let games =
              { id; subsets }))
 
 (** Returns `true` if the subset can be played with the given number of cubes. *)
-let check_subset subset avail =
+let check_subset avail subset =
   subset.red <= avail.red
   && subset.green <= avail.green
   && subset.blue <= avail.blue
 
 (** Returns `true` if the game can be played with the given number of cubes. *)
-let check_game game avail =
-  game.subsets |> List.for_all (fun subset -> check_subset subset avail)
+let check_game avail game = game.subsets |> List.for_all (check_subset avail)
 
 let id_sum =
   games
-  |> List.filter (fun game ->
-         check_game game { red = 12; green = 13; blue = 14 })
+  |> List.filter (check_game { red = 12; green = 13; blue = 14 })
   |> List.fold_left (fun acc game -> acc + game.id) 0
 ;;
 
 Printf.printf "Sum of IDs of valid games: \x1b[92m%d\x1b[m\n" id_sum
 
 (** Returns the lowest possible number of red, green, and blue cubes required
-    for the given subsets of a game *)
-let find_lowest subsets =
+    for the given game *)
+let find_lowest game =
   List.fold_left
     (fun acc subset ->
       {
@@ -68,11 +66,10 @@ let find_lowest subsets =
         blue = max acc.blue subset.blue;
       })
     { red = 0; green = 0; blue = 0 }
-    subsets
+    game.subsets
 
 let power_sum =
-  games
-  |> List.map (fun game -> find_lowest game.subsets)
+  games |> List.map find_lowest
   |> List.fold_left
        (fun acc subset -> acc + (subset.red * subset.green * subset.blue))
        0
