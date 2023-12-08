@@ -5,10 +5,10 @@ from subprocess import Popen, PIPE
 import os
 
 CC = "gcc"
-CFLAGS = "-std=c11 -Wall -Wextra"
+CFLAGS = "-std=c11 -Wall -Wextra -lm -pthread"
 
 CXX = "g++"
-CXXFLAGS = "-std=c++20 -Wall -Wextra"
+CXXFLAGS = "-std=c++20 -Wall -Wextra -lm -pthread"
 
 HS = "ghc"
 HSFLAGS = "-dynamic"
