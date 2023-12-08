@@ -97,7 +97,9 @@ struct node_map {
 };
 
 struct node_map * node_map_new() {
-    return malloc(sizeof(struct node_map));
+    struct node_map *self = malloc(sizeof(struct node_map));
+    memset(self, 0, sizeof(struct node_map));
+    return self;
 }
 
 void node_map_drop(struct node_map *self) {
