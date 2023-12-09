@@ -34,8 +34,8 @@ def main():
   ))
   #print(histories)
   before, after= map(sum, zip(*map(predict_values, histories)))
-  print(f"The sum of the previous values is \x1b[92m{before}\x1b[m")
   print(f"The sum of the next values is \x1b[92m{after}\x1b[m")
+  print(f"The sum of the previous values is \x1b[92m{before}\x1b[m")
 
 if __name__ == "__main__":
   main()
